@@ -10,7 +10,7 @@ public class CubeGrid
     public string PersistentFlags = "CastShadows InScene";
 
     public PositionAndOrientation PositionAndOrientation;
-    public GridSizeEnum GridSizeEnum = GridSizeEnum.Large;
+    public GridSize.Enum GridSizeEnum = GridSize.Enum.Large;
 
     [XmlArray("CubeBlocks"),XmlArrayItem("MyObjectBuilder_CubeBlock")]
     public List<CubeBlock> CubeBlocks;

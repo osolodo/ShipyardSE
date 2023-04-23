@@ -18,4 +18,9 @@ public class CubeBlock
     public BlockOrientation BlockOrientation;
     public SerializableVector3 ColorMaskHSV;
     public long BuiltBy;
+
+    public Transform prefab(){
+        return (Transform)Resources.Load<Transform>("Blocks/ArmorBlock");
+    }
+
 }

@@ -6,4 +6,6 @@ public class BlockOrientation
     public string Forward;
     [XmlAttribute("Up")]
     public string Up;
+
+    public override string ToString() => $"Forward:{Forward}\nUp:{Up}";
 }

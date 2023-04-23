@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 100705251}
   - component: {fileID: 100705253}
   - component: {fileID: 100705252}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -334,7 +334,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 32
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -452,7 +452,7 @@ GameObject:
   - component: {fileID: 764527296}
   - component: {fileID: 764527295}
   - component: {fileID: 764527294}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -552,7 +552,7 @@ GameObject:
   - component: {fileID: 804720672}
   - component: {fileID: 804720674}
   - component: {fileID: 804720673}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -627,7 +627,7 @@ GameObject:
   m_Component:
   - component: {fileID: 888044248}
   - component: {fileID: 888044249}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: quitBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -734,7 +734,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 23
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -753,14 +753,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.08715578, y: 0, z: 0, w: 0.9961947}
+  m_LocalPosition: {x: 0, y: 20, z: -50}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1306705537}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 10, y: 0, z: 0}
 --- !u!1 &1009226508
 GameObject:
   m_ObjectHideFlags: 0
@@ -772,7 +772,7 @@ GameObject:
   - component: {fileID: 1009226509}
   - component: {fileID: 1009226510}
   - component: {fileID: 1009226511}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: loadBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -908,7 +908,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 963194228}
-  - {fileID: 1691676296}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -921,11 +920,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1306705536}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c968c2566a39ee4cad7cec1ca8d6686, type: 3}
+  m_Script: {fileID: 11500000, guid: 11aa381a82390004c89ce1d0391f2737, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testTransform: {fileID: 8965660684519000675, guid: 512c7fa43a335ea4f893658ae26ea635, type: 3}
-  shipPosition: {fileID: 1691676296}
 --- !u!1 &1626603126
 GameObject:
   m_ObjectHideFlags: 0
@@ -937,7 +934,7 @@ GameObject:
   - component: {fileID: 1626603127}
   - component: {fileID: 1626603129}
   - component: {fileID: 1626603128}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1002,37 +999,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1626603126}
   m_CullTransparentMesh: 1
---- !u!1 &1691676295
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1691676296}
-  m_Layer: 0
-  m_Name: Ship
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1691676296
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1691676295}
-  m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
-  m_LocalPosition: {x: -30, y: 20, z: 50}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1306705537}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
 --- !u!1 &1835364494
 GameObject:
   m_ObjectHideFlags: 0
@@ -1077,7 +1043,7 @@ GameObject:
   - component: {fileID: 1896265403}
   - component: {fileID: 1896265405}
   - component: {fileID: 1896265404}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1156,7 +1122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1947528876}
   - component: {fileID: 1947528877}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}

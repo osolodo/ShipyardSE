@@ -37,10 +37,11 @@ public static class Blueprint
         if("bp.sbc".Equals(Path.GetFileName(paths[0]))) {
             ShipBlueprint blueprint = ShipBlueprint.Load(paths[0]);
             UnityEngine.GameObject.Find("ShipEditor").GetComponent<ShipManager>().SetShipBlueprint(blueprint);
+            save(paths[0],blueprint);
         }
     }
 
     private static void save( string path, ShipBlueprint blueprint ){
-            blueprint.Save(Path.Join(Path.GetDirectoryName(path),"bp.sbc"));
+            blueprint.Save(Path.Join(Path.GetDirectoryName(path),"bp2.sbc"));
     }
 }

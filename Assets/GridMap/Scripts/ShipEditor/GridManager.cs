@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CodeMonkey.Utils;
 
-public class BlockGrid : MonoBehaviour
+public class GridManager : MonoBehaviour
 {
     private float cubeSize = 2.5f;
     public event EventHandler<OnGridValueChangedEventArgs> OnGridValueChanged;
@@ -12,20 +12,24 @@ public class BlockGrid : MonoBehaviour
         public Vector3Int positionMin;
         public Vector3Int positionMax;
     }
-    private List<Block> blockList = new List<Block>();
+    private List<BlockManager> blockList = new List<BlockManager>();
 
-    private BlockGrid(){
+    private GridManager(){
     }
 
     private void instantiate(CubeGrid cubeGrid){
         
         this.transform.localPosition = Vector3.zero;
         this.transform.localEulerAngles = Vector3.zero;
-        cubeSize = cubeGrid.GridSizeEnum == GridSizeEnum.Large ? 2.5f : 0.5f;
+        cubeSize = (GridSize)cubeGrid.GridSizeEnum;
 
         Debug.Log("Blocks: "+cubeGrid.CubeBlocks.Count);
         cubeGrid.CubeBlocks.ForEach( (CubeBlock block) => {
-            this.SetGridObject(block.Min, new Block(block,this));
+            Debug.Log(block.Min.ToString() +", "+cubeSize);
+            Transform instance = Instantiate(block.prefab(), GetRelativePosition(block.Min), Quaternion.identity);
+            instance.parent = transform;
+            Debug.Log(instance.transform.position);
+            this.SetGridObject(block.Min, new BlockManager(block,instance));
         });
 
         /**
@@ -55,13 +59,13 @@ public class BlockGrid : MonoBehaviour
             cubeGrid.DisplayName;
     }
 
-    public static BlockGrid MakeGrid(CubeGrid cubeGrid, ShipManager parent){
-        GameObject self = new GameObject(GetName(cubeGrid),typeof(BlockGrid));
+    public static GridManager MakeGrid(CubeGrid cubeGrid, ShipManager parent){
+        GameObject self = new GameObject(GetName(cubeGrid),typeof(GridManager));
         Debug.Log("Creating Grid: "+self.name);
         self.transform.parent = parent.transform;
-        self.GetComponent<BlockGrid>().instantiate(cubeGrid);
+        self.GetComponent<GridManager>().instantiate(cubeGrid);
         Debug.Log("Grid Created");
-        return self.GetComponent<BlockGrid>();
+        return self.GetComponent<GridManager>();
     }
 
     public Vector3 GetWorldPosition(Vector3Int pos) {
@@ -80,13 +84,13 @@ public class BlockGrid : MonoBehaviour
         return new Vector3Int(x,y,z);
     }
 
-    public void SetGridObject(Vector3Int position, Block value) {
+    public void SetGridObject(Vector3Int position, BlockManager value) {
         //TODO: check validity
         blockList.Add(value);
         TriggerGridObjectChanged(position);
     }
 
-    public void SetGridObject(Vector3 worldPosition, Block value) {
+    public void SetGridObject(Vector3 worldPosition, BlockManager value) {
         SetGridObject(GetGridPosition(worldPosition),value);
     }
 
@@ -94,12 +98,12 @@ public class BlockGrid : MonoBehaviour
         if(OnGridValueChanged != null) OnGridValueChanged(this, new OnGridValueChangedEventArgs {positionMin = position, positionMax = position});
     }
 
-    public Block GetGridObject(Vector3 worldPosition) {
+    public BlockManager GetGridObject(Vector3 worldPosition) {
         return GetGridObject(GetGridPosition(worldPosition));
     }
 
-    public Block GetGridObject(Vector3Int position) {
-        return blockList.Find((Block element)=>{
+    public BlockManager GetGridObject(Vector3Int position) {
+        return blockList.Find((BlockManager element)=>{
             return false;
         });
     }
