@@ -28,7 +28,7 @@ public class GridManager : MonoBehaviour
         this.transform.localEulerAngles = Vector3.zero;
         cubeSize = (GridSize)cubeGrid.GridSizeEnum;
         cubeGrid.CubeBlocks.ForEach( (CubeBlock block) => {
-            Transform instance = Instantiate(block.prefab(), GetRelativePosition(block.Min), Quaternion.identity);
+            Transform instance = Instantiate(block.Prefab(), GetRelativePosition(block.Min), Quaternion.identity);
             instance.parent = transform;
             this.SetGridObject(block.Min, new BlockManager(block,instance));
         });

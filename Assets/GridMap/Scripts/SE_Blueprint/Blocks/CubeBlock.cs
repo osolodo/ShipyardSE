@@ -19,8 +19,16 @@ public class CubeBlock
     public SerializableVector3 ColorMaskHSV;
     public long BuiltBy;
 
-    public Transform prefab(){
-        return (Transform)Resources.Load<Transform>("Blocks/ArmorBlock");
+    public Transform Prefab(){
+        Transform attempt = null;
+        //LargeBlockArmorCorner
+        if(SubtypeName != null && SubtypeName.Length > 10 &&
+        (SubtypeName.StartsWith("LargeBlock") ||
+        SubtypeName.StartsWith("SmallBlock"))) {
+            string substring = SubtypeName[10..];
+            attempt = (Transform)Resources.Load<Transform>($"Blocks/{substring}");
+        }
+        return attempt ?? (Transform)Resources.Load<Transform>("Blocks/ArmorBlock");
     }
 
 }
