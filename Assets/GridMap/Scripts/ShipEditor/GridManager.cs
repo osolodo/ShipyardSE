@@ -14,6 +14,11 @@ public class GridManager : MonoBehaviour
     }
     private List<BlockManager> blockList = new List<BlockManager>();
 
+    private Vector3Int Max;
+    private Vector3Int Min;
+
+    public Vector3 Center;
+
     private GridManager(){
     }
 
@@ -22,35 +27,21 @@ public class GridManager : MonoBehaviour
         this.transform.localPosition = Vector3.zero;
         this.transform.localEulerAngles = Vector3.zero;
         cubeSize = (GridSize)cubeGrid.GridSizeEnum;
-
-        Debug.Log("Blocks: "+cubeGrid.CubeBlocks.Count);
         cubeGrid.CubeBlocks.ForEach( (CubeBlock block) => {
-            Debug.Log(block.Min.ToString() +", "+cubeSize);
             Transform instance = Instantiate(block.prefab(), GetRelativePosition(block.Min), Quaternion.identity);
             instance.parent = transform;
-            Debug.Log(instance.transform.position);
             this.SetGridObject(block.Min, new BlockManager(block,instance));
         });
+        Center = ((Vector3)Max-Min)/2;
 
-        /**
-        bool showDebug = false;
+        bool showDebug = true;
         if(showDebug) {
-            TextMesh[,] debugTextArray = new TextMesh[width, height];
-            for (int x=0; x<gridArray.GetLength(0); x++){
-                for (int y=0; y<gridArray.GetLength(1); y++){
-                    debugTextArray[x,y] = UtilsClass.CreateWorldText(gridArray[x,y]?.ToString(), null, GetWorldPosition(x,y) + new Vector3(cellSize,cellSize) * 0.5f, 20, Color.white, TextAnchor.MiddleCenter);
-                    Debug.DrawLine(GetWorldPosition(x,y), GetWorldPosition(x,y+1), Color.white, 100f);
-                    Debug.DrawLine(GetWorldPosition(x,y), GetWorldPosition(x+1,y), Color.white, 100f);
-                }
-            }
-            Debug.DrawLine(GetWorldPosition(0,height), GetWorldPosition(width, height), Color.white, 100f);
-            Debug.DrawLine(GetWorldPosition(width,0), GetWorldPosition(width, height), Color.white, 100f);
-
-            OnGridValueChanged += (object sender, OnGridValueChangedEventArgs eventArgs) => {
-                debugTextArray[eventArgs.x, eventArgs.y].text = gridArray[eventArgs.x, eventArgs.y]?.ToString();
-            };
+            Vector3 c = GetWorldPosition(Vector3Int.RoundToInt(Center));
+            Vector3Utils.DebugDrawCube(GetWorldPosition(Min),GetWorldPosition(Max), Color.blue);
+            Vector3Utils.DebugDrawCube(c-Vector3Int.one,c+Vector3Int.one, Color.red);
+            // OnGridValueChanged += (object sender, OnGridValueChangedEventArgs eventArgs) => {
+            // };
         }
-        */
     }
 
     private static string GetName(CubeGrid cubeGrid) {
@@ -64,12 +55,15 @@ public class GridManager : MonoBehaviour
         Debug.Log("Creating Grid: "+self.name);
         self.transform.parent = parent.transform;
         self.GetComponent<GridManager>().instantiate(cubeGrid);
-        Debug.Log("Grid Created");
         return self.GetComponent<GridManager>();
     }
 
     public Vector3 GetWorldPosition(Vector3Int pos) {
         return this.transform.TransformVector(((Vector3)pos) * cubeSize);
+    }
+
+    public Vector3 GetCenterWorldPosition() {
+        return this.transform.TransformVector(Center * cubeSize);
     }
 
     public Vector3 GetRelativePosition(Vector3Int pos) {
@@ -85,8 +79,11 @@ public class GridManager : MonoBehaviour
     }
 
     public void SetGridObject(Vector3Int position, BlockManager value) {
-        //TODO: check validity
         blockList.Add(value);
+        // TODO: This will only ever grow, need something else for removing blocks
+        // Also wrong on instatiation, so fix that eventually
+        Min = Vector3Int.Min(Min,position);
+        Max = Vector3Int.Max(Max,position+Vector3Int.one);
         TriggerGridObjectChanged(position);
     }
 
