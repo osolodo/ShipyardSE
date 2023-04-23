@@ -6,6 +6,7 @@ public class CameraControl : MonoBehaviour
 {
     public static readonly float MIN_ZOOM = 5f;
     public static readonly float MAX_ZOOM = 5000f;
+    public static readonly float Deadzone = 0.01f;
     public static readonly float cameraMoveSpeed = 3f;
     public static readonly float cameraZoomSpeed = 1f;
     public static readonly float cameraRotateSpeed = 0.1f;
@@ -22,16 +23,14 @@ public class CameraControl : MonoBehaviour
         if (teleportToFollowPosition) {
             Debug.Log(cameraTargetPosition);
             transform.position = cameraTargetPosition;
-            myCamera.transform.position = cameraTargetPosition;
-            myCamera.transform.Translate(myCamera.transform.forward * -cameraZoom);
+            InstantZoom();
         }
     }
 
     private void Awake() {
         Instance = this;
         myCamera = transform.GetComponentInChildren<Camera>();
-        myCamera.transform.position = cameraTargetPosition;
-        myCamera.transform.Translate(myCamera.transform.forward * -cameraZoom);
+        InstantZoom();
     }
 
     public void SetCameraZoom(float cameraZoom) {
@@ -40,31 +39,37 @@ public class CameraControl : MonoBehaviour
 
 
     private void Update() {
-        RotationInput();
+        HandleInput();
         HandleMovement();
         HandleZoom();
-        HandleRotate();
     }
 
-    private void RotationInput(){
-        // These are rotating in the wrong context, try a multiaxis rotation and find out
+    private void HandleInput(){
         float Horizontal_Rotation = Input.GetAxis(InputAxis.Horizontal.ToString());
         if(Horizontal_Rotation != 0) {
-            transform.Rotate(myCamera.transform.up,cameraRotateSpeed*Horizontal_Rotation);
+            transform.Rotate(myCamera.transform.up,cameraRotateSpeed*Horizontal_Rotation*-1, Space.World);
         }
         float Vertical_Rotation = Input.GetAxis(InputAxis.Vertical.ToString());
         if(Vertical_Rotation != 0) {
-            transform.Rotate(myCamera.transform.right,cameraRotateSpeed*Vertical_Rotation);
+            transform.Rotate(myCamera.transform.right,cameraRotateSpeed*Vertical_Rotation, Space.World);
+        }
+        float Roll_Rotation = Input.GetAxis(InputAxis.Roll.ToString());
+        if(Roll_Rotation != 0) {
+            transform.Rotate(myCamera.transform.forward,cameraRotateSpeed*Roll_Rotation, Space.World);
+        }
+        float ZoomDelta = Input.GetAxis(InputAxis.Zoom.ToString());
+        if(ZoomDelta != 0) {
+            SetCameraZoom(cameraZoom + ZoomDelta);
+            InstantZoom();
         }
     }
 
     private void HandleMovement() {
-        if (cameraTargetPosition == null) return;
 
-        Vector3 cameraMoveDir = (cameraTargetPosition - transform.position).normalized;
         float distance = Vector3.Distance(cameraTargetPosition, transform.position);
 
-        if (distance > 0) {
+        if (distance > Deadzone) {
+            Vector3 cameraMoveDir = (cameraTargetPosition - transform.position).normalized;
             Vector3 newCameraPosition = transform.position + cameraMoveDir * distance * cameraMoveSpeed * Time.deltaTime;
 
             float distanceAfterMoving = Vector3.Distance(newCameraPosition, cameraTargetPosition);
@@ -81,28 +86,27 @@ public class CameraControl : MonoBehaviour
     private void HandleZoom() {
         float cameraZoomCurrent = Vector3.Distance(myCamera.transform.position, transform.position);
         float cameraZoomDifference = cameraZoomCurrent - cameraZoom; // Positive means zooming in (forward)
-        if(cameraZoomDifference==0){
+        if(Mathf.Abs(cameraZoomDifference) <= Deadzone){
             return;
         }
-        Vector3 cameraMoveDir = myCamera.transform.forward;
-        Vector3 newCameraPosition = cameraMoveDir * cameraZoomDifference * cameraZoomSpeed * Time.deltaTime;
-        myCamera.transform.Translate(newCameraPosition);
+        
+        float newDistance =  cameraZoomCurrent + cameraZoomDifference * cameraZoomSpeed * Time.deltaTime;
+        myCamera.transform.localPosition = Vector3.forward * -newDistance;
+        Debug.Log($"{cameraZoomCurrent}, {cameraZoomDifference}, {newDistance}");
 
-        float newDistance = Vector3.Distance(myCamera.transform.position, transform.position);
         if (cameraZoomDifference > 0) {
             if (newDistance < cameraZoom) {
-                myCamera.transform.position = cameraTargetPosition;
-                myCamera.transform.Translate(myCamera.transform.forward * -cameraZoom);
+                InstantZoom();
             }
         } else {
             if (newDistance > cameraZoom) {
-                myCamera.transform.position = cameraTargetPosition;
-                myCamera.transform.Translate(myCamera.transform.forward * -cameraZoom);
+                InstantZoom();
             }
         }
     }
 
-    private void HandleRotate(){
-        // TODO
+    private void InstantZoom(){
+        myCamera.transform.localPosition = Vector3.zero;
+        myCamera.transform.localPosition = Vector3.forward * -cameraZoom;
     }
 }
