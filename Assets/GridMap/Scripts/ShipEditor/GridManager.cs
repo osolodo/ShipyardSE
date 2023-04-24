@@ -29,6 +29,7 @@ public class GridManager : MonoBehaviour
         cubeSize = (GridSize)cubeGrid.GridSizeEnum;
         cubeGrid.CubeBlocks.ForEach( (CubeBlock block) => {
             Transform instance = Instantiate(block.Prefab(), GetRelativePosition(block.Min), Quaternion.identity);
+            instance.localScale *= cubeSize;
             instance.parent = transform;
             this.SetGridObject(block.Min, new BlockManager(block,instance));
         });

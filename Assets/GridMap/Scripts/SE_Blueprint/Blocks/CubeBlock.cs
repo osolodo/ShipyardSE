@@ -22,13 +22,13 @@ public class CubeBlock
     public Transform Prefab(){
         Transform attempt = null;
         //LargeBlockArmorCorner
-        if(SubtypeName != null && SubtypeName.Length > 10 &&
-        (SubtypeName.StartsWith("LargeBlock") ||
-        SubtypeName.StartsWith("SmallBlock"))) {
-            string substring = SubtypeName[10..];
-            attempt = (Transform)Resources.Load<Transform>($"Blocks/{substring}");
+        if(SubtypeName != null && SubtypeName.Length > 15 &&
+        (SubtypeName.StartsWith("LargeBlockArmor") ||
+        SubtypeName.StartsWith("SmallBlockArmor"))) {
+            string substring = SubtypeName[15..];
+            attempt = Resources.Load<Transform>($"Prefabs/Blocks/{substring}");
         }
-        return attempt ?? (Transform)Resources.Load<Transform>("Blocks/ArmorBlock");
+        return attempt ?? Resources.Load<Transform>("Prefabs/Blocks/Block");
     }
 
 }
